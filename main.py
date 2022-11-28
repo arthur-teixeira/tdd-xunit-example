@@ -11,6 +11,19 @@ class BrokenTearDownTestCase(TestCase):
     def testMethod(self):
         pass
 
+class DummyTestCase(TestCase):
+    def setUp(self):
+        self.log = "setUp "
+
+    def test1(self):
+        self.log += "test1 "
+    def test2(self):
+        self.log += "test2 "
+    def test3(self):
+        self.log += "test3 "
+    def test4(self):
+        self.log += "test4 "
+
 class TestCaseTest(TestCase):
     def setUp(self):
         self.result = TestResult()
@@ -56,6 +69,13 @@ class TestCaseTest(TestCase):
         test = BrokenTearDownTestCase("testMethod")
         test.run(self.result)
         assert("1 run, 1 failed" == self.result.summary())
+
+    def testSuiteFromTestClass(self):
+        suite = TestSuite()
+        suite.fromClass(DummyTestCase)
+        suite.run(self.result)
+        assert("4 run, 0 failed" == self.result.summary())
+        
         
 
 suite = TestSuite()
@@ -67,6 +87,7 @@ suite.add(TestCaseTest("testFailOnSetUp"))
 suite.add(TestCaseTest("testSuite"))
 suite.add(TestCaseTest("testTearDownInvokedWhenTestFails"))
 suite.add(TestCaseTest("testFailOnTearDown"))
+suite.add(TestCaseTest("testSuiteFromTestClass"))
 
 result = TestResult()
 suite.run(result)
