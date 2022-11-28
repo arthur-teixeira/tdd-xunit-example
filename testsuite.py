@@ -1,4 +1,5 @@
 from testcase import TestCase
+from getmethodsfromclass import get_methods_from_class
 
 class TestSuite:
     def __init__(self) -> None:
@@ -13,17 +14,11 @@ class TestSuite:
             self.add(target(test_method))
     
     def get_method_list(self, target):
-        return [
-            func for func in dir(target) 
-            if callable(getattr(target, func)) and not func.startswith("__")
-            and not func in self.test_case_default_methods()
-        ]
+        return [method for method in get_methods_from_class(target)
+            if not method in self.test_case_default_methods()]
     
     def test_case_default_methods(self):
-        return [
-            func for func in dir(TestCase) 
-            if callable(getattr(TestCase, func)) and not func.startswith("__")
-        ]
+        return get_methods_from_class(TestCase)
 
     def run(self, result):
         for test in self.tests:
