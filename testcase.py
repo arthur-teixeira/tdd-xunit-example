@@ -8,8 +8,7 @@ class TestCase:
         pass
     def tearDown(self):
         pass
-    def run(self):
-            result = TestResult()
+    def run(self, result):
             result.testStarted()
             try:
                 self.setUp()
