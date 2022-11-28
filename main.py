@@ -44,6 +44,12 @@ class WasRun(TestCase):
     def testBrokenMethod(self):
         raise Exception
 
+class BrokenSetUpTestCase(TestCase):
+    def setUp(self):
+        raise Exception
+    def testMethod(self):
+        pass
+
 class TestCaseTest(TestCase):
     def testTemplateMethod(self):
         test = WasRun("testMethod")
@@ -60,22 +66,19 @@ class TestCaseTest(TestCase):
         result = test.run()
         assert("1 run, 1 failed" == result.summary())
 
+    def testFailOnSetUp(self):
+        test = BrokenSetUpTestCase("testMethod")
+        result = test.run()
+        assert("1 run, 1 failed" == result.summary())
+
     def testFailedResultFormatting(self):
         result = TestResult()
         result.testStarted()
         result.testFailed()
         assert("1 run, 1 failed" == result.summary())
 
-class FailingSetUpTestCaseTest(TestCase):
-    def setUp(self):
-        raise Exception
-    def testFailOnSetUp(self):
-        test = WasRun("testMethod")
-        result = test.run()
-        assert("1 run, 1 failed" == result.summary())
-
-TestCaseTest("testTemplateMethod").run()
-TestCaseTest("testResult").run()
-TestCaseTest("testFailedResultFormatting").run()
-TestCaseTest("testFailedResult").run()
-FailingSetUpTestCaseTest("testFailOnSetUp").run()
+print(TestCaseTest("testTemplateMethod").run().summary())
+print(TestCaseTest("testResult").run().summary())
+print(TestCaseTest("testFailedResultFormatting").run().summary())
+print(TestCaseTest("testFailedResult").run().summary())
+print(TestCaseTest("testFailOnSetUp").run().summary())
