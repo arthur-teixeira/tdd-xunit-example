@@ -16,5 +16,9 @@ class TestCase:
                 method()
             except:
                 result.testFailed()
-            self.tearDown()
+
+            try:
+                self.tearDown()
+            except:
+                result.testFailed()
             return result
