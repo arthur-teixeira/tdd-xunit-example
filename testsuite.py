@@ -1,3 +1,5 @@
+from testcase import TestCase
+
 class TestSuite:
     def __init__(self) -> None:
         self.tests = []
@@ -14,9 +16,15 @@ class TestSuite:
         return [
             func for func in dir(target) 
             if callable(getattr(target, func)) and not func.startswith("__")
-            and not func in ['run', 'setUp', 'tearDown']
+            and not func in self.test_case_default_methods()
         ]
     
+    def test_case_default_methods(self):
+        return [
+            func for func in dir(TestCase) 
+            if callable(getattr(TestCase, func)) and not func.startswith("__")
+        ]
+
     def run(self, result):
         for test in self.tests:
             test.run(result)

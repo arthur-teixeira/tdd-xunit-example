@@ -1,28 +1,9 @@
 from testcase import TestCase, TestResult
 from wasrun import WasRun
 from testsuite import TestSuite
-class BrokenSetUpTestCase(TestCase):
-    def setUp(self):
-        raise Exception
+from brokentestcases import BrokenSetUpTestCase, BrokenTearDownTestCase
+from dummytestcase import DummyTestCase
 
-class BrokenTearDownTestCase(TestCase):
-    def tearDown(self):
-        raise Exception
-    def testMethod(self):
-        pass
-
-class DummyTestCase(TestCase):
-    def setUp(self):
-        self.log = "setUp "
-
-    def test1(self):
-        self.log += "test1 "
-    def test2(self):
-        self.log += "test2 "
-    def test3(self):
-        self.log += "test3 "
-    def test4(self):
-        self.log += "test4 "
 
 class TestCaseTest(TestCase):
     def setUp(self):
@@ -75,20 +56,11 @@ class TestCaseTest(TestCase):
         suite.fromClass(DummyTestCase)
         suite.run(self.result)
         assert("4 run, 0 failed" == self.result.summary())
-        
-        
 
 suite = TestSuite()
-suite.add(TestCaseTest("testTemplateMethod"))
-suite.add(TestCaseTest("testResult"))
-suite.add(TestCaseTest("testFailedResultFormatting"))
-suite.add(TestCaseTest("testFailedResult"))
-suite.add(TestCaseTest("testFailOnSetUp"))
-suite.add(TestCaseTest("testSuite"))
-suite.add(TestCaseTest("testTearDownInvokedWhenTestFails"))
-suite.add(TestCaseTest("testFailOnTearDown"))
-suite.add(TestCaseTest("testSuiteFromTestClass"))
+suite.fromClass(TestCaseTest)
 
 result = TestResult()
 suite.run(result)
+
 print(result.summary())
